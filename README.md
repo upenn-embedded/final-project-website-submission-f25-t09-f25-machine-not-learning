@@ -561,11 +561,11 @@ Overall, our final design provides an engaging, responsive, and affordable alter
 | ID     | Description                                                                                                                                                              | Validation Outcome                                                                                                      |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | HRS-01 | The ATmega328PB microcontroller shall operate to ensure accurate timing control for LED and sound synchronization using pressure sensors and SPI communication with LCD. | Confirmed, sensed obstacles up to 15cm. Video in "validation" folder, shows tape measure and logged output to terminal. |
-| HRS-02 | Each pressure sensor beneath the mat modules shall detect applied forces in the range of0 N to 686 N (0-37kPa) with a voltage output sensitivity of ≥10 mV/N.          |                                                                                                                         |
-| HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. |                                                                                                                         |
-| HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           |                                                                                                                         |
-| HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      |                                                                                                                         |
-| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       |                                                                                                                         |
+| HRS-02 | Each pressure sensor beneath the mat modules shall detect applied forces in the range of0 N to 686 N (0-37kPa) with a voltage output sensitivity of ≥10 mV/N.          | Confirmed,                                                                                                              |
+| HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. | Confirmed,                                                                                                              |
+| HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           | Confirmed,                                                                                                              |
+| HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      | Confirmed,                                                                                                              |
+| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       | Confirmed,                                                                                                              |
 
 ### 4. Conclusion
 
@@ -590,7 +590,7 @@ Reflect on your project. Some questions to address:
 
 ## Debugging and System Stabilization
 
-The main issue was that the system occasionally “froze” during the music game. At first the game ran smoothly for many notes, but later it stopped updating the block number and stayed stuck on one value (for example block 7).
+The main issue was that the system occasionally **“froze”** during the music game. At first the game ran smoothly for many notes, but later it stopped updating the block number and stayed stuck on one value (for example block 7).
 
 We analyzed several possible causes:
 
