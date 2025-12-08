@@ -532,6 +532,8 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 [Insert final project video here]
 
+[Video link](https://drive.google.com/file/d/1BiyH7qF1WEpQ59m6lbLG-jXoRF1k8Nr0/view?usp=sharing**) https://drive.google.com/file/d/1BiyH7qF1WEpQ59m6lbLG-jXoRF1k8Nr0/view?usp=sharing**
+
 * The video must demonstrate your key functionality.
 * The video must be 5 minutes or less.
 * Ensure your video link is accessible to the teaching team. Unlisted YouTube videos or Google Drive uploads with SEAS account access work well.
@@ -547,6 +549,19 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 *What were your results? Namely, what was the final solution/design to your problem?*
 
+Our final solution addressed the problem that commercial dance-arcade machines are expensive, bulky, and not accessible for casual use. We designed and built a portable, low-cost dance pad that replicates the core gameplay experience and integrates seamlessly with a computer.
+
+Once the pad is connected to a PC, pressing a start button initializes the game. During gameplay, blocks are displayed on the screen, where each block can appear as a hint (shown in yellow) or detected as a correct step (shown in green) when the user steps on the corresponding pad region. At the same time, an onboard LCD keeps a real-time score, incrementing by one point for every correct step.
+
+The dance pad itself uses  four LED strips arranged to represent nine grid cells . Visual feedback is provided directly on the pad:
+
+* Hints are illuminated using  intermittent white light ,
+* Successful steps trigger  solid red light .
+
+To enhance immersion, background music (BGM) plays through the computer once the game begins. Additionally, each successful step activates a buzzer on the dance pad that produces a corresponding tone in sync with the music.
+
+Overall, our final design provides an engaging, responsive, and affordable alternative to arcade dance-machine systems, while maintaining portability and interactive feedback through LEDs, audio cues, and real-time scoring.
+
 #### 3.1 Software Requirements Specification (SRS) Results
 
 *Based on your quantified system performance, comment on how you achieved or fell short of your expected requirements.*
@@ -555,9 +570,14 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 *Validate at least two requirements, showing how you tested and your proof of work (videos, images, logic analyzer/oscilloscope captures, etc.).*
 
-| ID     | Description                                                                                               | Validation Outcome                                                                          |
-| ------ | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| SRS-01 | The IMU 3-axis acceleration will be measured with 16-bit depth every 100 milliseconds +/-10 milliseconds. | Confirmed, logged output from the MCU is saved to "validation" folder in GitHub repository. |
+| ID     | Description                                                                                                                                                                                                                                                                                                                              | Validation Outcome                                                                                            |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| SRS-01 | The pressure sensors beneath each pad shall be sampled every 50 milliseconds ± 10 milliseconds to detect whether the pad is pressed and to estimate step intensity (light, strong).                                                                                                                                                     | Confirmed, ISR of 5ms is implemented                                                                          |
+|        | Before each note, a partial section of the corresponding LED strip shall turn on as a visual hint approximately 0.5 ± 0.1 s before the expected step. When the user steps on that block within the valid timing window, the entire LED region for that pad shall light up fully and remain on while the pressure sensor detects contact | Confirmed, block lighting has same pace as ui and bgm                                                         |
+|        | The LCD shall refresh the score within 1 second after each step is detected. A score of 1 shall be awarded if the player steps on the correct pad within a ±1 second window from the LED instruction; otherwise, a score of 0 shall be recorded.                                                                                        | Confirmed, presssing a sensor will give immdediate feedback that humen eyes cannot detect delay               |
+|        | After each game session, the system shall display the final score and accuracy summary within 3 seconds of song completion.                                                                                                                                                                                                              | Confirmed, immediate scoring that humen eyes cannot detect delay                                              |
+|        | The system shall generate PWM signals at different frequencies to drive the buzzer and produce distinct pitches when the player steps correctly within the allowed 1-second timing window. If no valid step is detected within that window, the buzzer shall not be activated.                                                           | Confirmed, correct step will generate a tone in response to bgm and incorrect step will not generate anything |
+|        | The system shall allow the user to select the difficulty level by pressing a designated button. Each difficulty corresponds to a different preloaded song (e.g., slow or fast tempo). Upon valid button input, the system shall stop the current track and start the selected song within 3 seconds.                                     | Not implemented, too time consuming to find another song with easy and continuous musical track.              |
 
 #### 3.2 Hardware Requirements Specification (HRS) Results
 
