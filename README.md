@@ -14,7 +14,7 @@
 
 **GitHub Repository URL: https://github.com/upenn-embedded/final-project-f25-f25_final_project_t09.git**
 
-**GitHub Pages Website URL:** [for final submission]*
+**GitHub Pages Website URL:**
 
 ## Final Project Proposal
 
@@ -34,7 +34,7 @@ This project combines entertainment technology with fitness in a creative and in
 
 *Show your high level design, as done in WS1 and WS2. What are the **critical components** in your system? How do they communicate (**I2C?, interrupts, ADC, etc.**)? What **power regulation** do you need?*
 
-![1761490758425](image/README/1761490758425.png)
+![1764985521975](image/README/1764985521975.png)
 
 ![1762888344610](image/README/1762888344610.png)
 
@@ -50,9 +50,9 @@ The power system uses a regulated 5 V supply from USB with a voltage regulator. 
 
 The finished project will look like a flat, flexible play mat with nine marked stepping zones, each backed by a pressure sensor, RGB LED strips around each zone, a small control box housing the ATmega328PB board, power module and speaker, and a compact LCD mounted near the top edge for score. Visually it’s an interactive rug, durable top layer with printed graphics, LED channels visible around zones, a middle layer holding sensors and wiring. Cables are routed to a single harness with strain relief and a common ground. The user interface is minimal and the whole system is designed to be portable.
 
-Critical design features are reliable pressure sensing (stable ADC readings or clean digital interrupts), robust power distribution for the LED strips, good signal integrity for SPI.
+Critical design features are **reliable pressure sensing** (stable ADC readings or clean digital interrupts), robust power distribution for the LED strips, good signal integrity for **SPI**.
 
-No need for special manufacturing techniques to achieve vision, like power tools, laser cutting, or 3D printing.
+**No need** for special manufacturing techniques to achieve vision, like power tools, laser cutting, or 3D printing.
 
 ### 5. Software Requirements Specification (SRS)
 
@@ -61,8 +61,6 @@ No need for special manufacturing techniques to achieve vision, like power tools
 *These must be testable! See the Final Project Manual Appendix for details. Refer to the table below; replace these examples with your own.*
 
 **5.1 Definitions, Abbreviations**
-
-Here, you will define any special terms, acronyms, or abbreviations you plan to use for hardware
 
 **LED (Light Emitting Diode):**
 
@@ -95,8 +93,6 @@ A technique for controlling analog output using a digital signal by varying the 
 
 **6.1 Definitions, Abbreviations**
 
-Here, you will define any special terms, acronyms, or abbreviations you plan to use for hardware
-
 **SPI (Serial Peripheral Interface):**
 
 A synchronous serial communication protocol used for short-distance data exchange between a microcontroller and peripheral devices such as sensors, displays, or memory chips.
@@ -118,7 +114,7 @@ A flat-panel display module that uses liquid crystals to show visual information
 | HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. |
 | HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           |
 | HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      |
-| HRS-06 | The button is used to switch songs for different difficult levels                                                                                                        |
+| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       |
 
 ### 7. Bill of Materials (BOM)
 
@@ -161,18 +157,6 @@ This setup will effectively demonstrate the system’s ability to integrate pres
 
 ### Last week's progress
 
-**Updates & proof of work for tasks:**
-
-**Images, videos**
-
-**GitHub commits**
-
-**Mini-reports on debugging and development activities**
-
-**Anything you observed or discovered throughout the work that is relevant to the project**
-
-**What tasks took longer than expected and why? What blockers did you realize only after you started? Did any of the tasks have to change? How does all this tie into the end goal?**
-
 **LCD, LED, and audio processing completed.**
 
 **https://vscode.dev/github/upenn-embedded/final-project-f25-f25_final_project_t09/blob/main/LCD**
@@ -186,8 +170,6 @@ This setup will effectively demonstrate the system’s ability to integrate pres
 ![1763174210991](image/README/1763174210991.png)
 
 ![1763174347808](image/README/1763174347808.png)
-
-**Video of LED strip: https://drive.google.com/file/d/1sJgQ5RxYA7slZjzjBtrfXb87fgCean_5/view?usp=sharing**
 
 Audio processing ultimately took significantly longer than expected. The initial approach was to use online tools and software to separate the vocals and background music of a selected song. However, even after separation, the remaining background audio was still too complex for direct analysis. As a result, several alternative tools were tested, including separating guitar, bass, piano, and other instrumental tracks individually. After evaluating multiple outputs, a single, rhythmically stable instrumental track (.wav) was chosen as the basis for feature extraction.
 
@@ -225,32 +207,26 @@ Bill of Materials (BOM) completed, materials procured. LED light strips, speaker
 
 ### Next week's plan
 
-**A brief description of the task
-Estimated time
-Assigned team member
-Definition of  "done".
-Detailed description (optional)**
-
 The task for next week consists of two major goals. First, we aim to reduce RAM usage and eliminate memory-related pitch instability on the ATmega328PB. The objective is to prevent SRAM and Flash exhaustion so that timers, PWM generation, and note buffers operate reliably. The strategy is to apply increasingly stronger optimizations, beginning with the least costly changes. Large constant arrays will be moved into program memory so they do not consume SRAM, and they will be declared as const and stored in PROGMEM with pgm_read accessors used when needed. All data structures will be reduced to the smallest integer types that still cover the required ranges, eliminating unnecessary use of uint16_t or larger types. Floating-point operations will be removed from the runtime code and replaced with look-up tables and fixed-point or precomputed integer values. Timer TOP values for all notes will be precomputed offline using Python and stored in PROGMEM, removing expensive freq calculations. Stack usage will be minimized by avoiding large local arrays and recursion, and heavy library functions such as printf will be removed. If memory remains insufficient, the final fallback will be to stream note data from external memory (SD card, SPI flash, or UART) instead of storing entire music sequences internally.
 
 The second goal is to deliver a complete and detailed implementation of pressure-sensor input on the ATmega328PB using MPLAB X and XC8. This involves the wiring of a resistive sensor or FSR using a voltage-divider configuration feeding an ADC pin, along with proper analog power decoupling and AREF configuration. The design will include a sampling strategy with a suitable rate such as 500 Hz, ADC configuration with a prescaler that ensures a stable ADC clock, and smoothing using simple filters. A hysteresis-based press/release detection scheme will be implemented using dynamic thresholds derived from baseline calibration. The software flow will cover ADC initialization, timer-based periodic sampling, filtering, threshold testing, and event generation. The main loop will process these events, update the LCD and LEDs if needed, and trigger tone generation through Timer0 PWM. Code examples will include initialization, the ADC sampling ISR or free-running mode, filtering logic, threshold detection, and triggering of note_on and note_off operations. Clear notes will be provided on XC8 and AVR specifics within MPLAB X, such as required headers and device settings.
 
-1. implement pressure sensor library
+1. **implement pressure sensor library**
 
    * Team member: Yang Xing
    * Estimated Time: 6 hours
    * Definition of "done": Pressure sensor can send two signals, 'heavy' or 'light' to the mcu
-2. continue working on frequency sampling
+2. **continue working on frequency sampling**
 
    * Team member：Shang Wang
    * Estimated Time: 6 hours
    * Definition of "done": The music can be sampled and grouped into different notes with their corresponding lasting times.
-3. integrate buzzer with tones that finish sampling and grouping
+3. **integrate buzzer with tones that finish sampling and grouping**
 
    * Team member: Xiang Ding
    * Estimated Time: 6 hours
    * Definition of "done": Buzzer can play the tone in the time period of the tone's lasting time.
-4. combine pressure sensor library with buzzer
+4. **combine pressure sensor library with buzzer**
 
    * Team member: Xiang Ding, Yang Xing, Shang Wang
    * Estimated Time: 12 hours
@@ -287,25 +263,25 @@ The second objective is to integrate the LCD score-display module into the syste
 
 Individual tasks for the week are:
 
-implement SPI-based WS2812/SK6812 LED control subsystem
+**implement SK6812 LED control subsystem**
 
 * Team member: Xiang Ding
 * Estimated Time: 6 hours
-* Definition of "done": A stable LED-control library is implemented using the SPI-encoded waveform method, the strip is installed with correct hardware components (series resistor, capacitor, grounding), and the LED strip can display full-strip colors and per-pixel updates reliably.
+* Definition of "done": A stable LED-control library is implemented using the encoded waveform method, the strip is installed with correct hardware components (series resistor, capacitor, grounding), and the LED strip can display full-strip colors and per-pixel updates reliably.
 
-finalize LED-strip installation and mechanical/electrical stabilization
+**finalize LED-strip installation and mechanical/electrical stabilization**
 
 * Team member: Yang Xing
 * Estimated Time: 6 hours
 * Definition of "done": LED strip is physically mounted, all wiring and connectors are fixed securely, and the 5 V distribution, grounding, and capacitor/resistor components are fully installed and verified on hardware.
 
-integrate LCD score-display module with buzzer and sensor subsystems
+**integrate LCD score-display module with buzzer and sensor subsystems**
 
 * Team member: Shang Wang
 * Estimated Time: 6 hours
 * Definition of "done": The LCD module is wired, communication routines are working, and gameplay events correctly update the LCD display. LCD output works together with buzzer output and sensor input in a unified system.
 
-full-system integration of LED subsystem, LCD display, buzzer, and pressure sensor
+**full-system integration of LED subsystem, LCD display, buzzer, and pressure sensor**
 
 * Team members: Xiang Ding, Yang Xing, Shang Wang
 * Estimated Time: 12 hours
@@ -314,20 +290,7 @@ Definition of "done": All modules operate together reliably. Pressure events tri
 
 ## MVP Demo
 
-1. Show a system block diagram & explain the hardware implementation.
-2. Explain your firmware implementation, including application logic and critical drivers you've written.
-3. Demo your device.
-4. Have you achieved some or all of your Software Requirements Specification (SRS)?
-
-   1. Show how you collected data and the outcomes.
-5. Have you achieved some or all of your Hardware Requirements Specification (HRS)?
-
-   1. Show how you collected data and the outcomes.
-6. Show off the remaining elements that will make your project whole: mechanical casework, supporting graphical user interface (GUI), web portal, etc.
-7. What is the riskiest part remaining of your project?
-
-   1. How do you plan to de-risk this?
-8. What questions or help do you need from the teaching team?
+**A computer plays the song. At the same time, the essential notes from that song were already transformed into real frequencies, then mapped to Timer0 compare values (OCR0B), and saved in the ATmega firmware as fixed arrays. These stored notes are organized by pitch into nine frequency sets, matching nine zones on the carpet. Four LED strips visually mark a 3×3 grid, dividing the mat into nine blocks. As the song progresses, the firmware predicts which block corresponds to the next key note and makes the LED border around that block half-bright just before the note happens. If the player steps on the correct block at the expected moment, the MCU instantly outputs the same note’s frequency as sound and turns that block’s LED border fully bright. If the player does not step correctly, the MCU outputs no sound and the LEDs stay off. This closes the loop: the song runs normally, the firmware forecasts the next key note to preview the block, the footstep decides whether the note is triggered locally in real time, and the LEDs show either a half-bright preview or a full-bright hit result.**
 
 ![1764205667426](image/README/1764205667426.png)
 
@@ -530,9 +493,13 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 ### 1. Video
 
-[Insert final project video here]
+**Demo Hint Only: https://drive.google.com/file/d/1PPW-uhF3AvNN9ISKI62phGgpCDDRCXEw/view?usp=sharing**
 
-[Video link](https://drive.google.com/file/d/1BiyH7qF1WEpQ59m6lbLG-jXoRF1k8Nr0/view?usp=sharing**) https://drive.google.com/file/d/1BiyH7qF1WEpQ59m6lbLG-jXoRF1k8Nr0/view?usp=sharing**
+**Demo Thursday Version: https://drive.google.com/file/d/1BiyH7qF1WEpQ59m6lbLG-jXoRF1k8Nr0/view?usp=sharing**
+
+**Demo Friday Version: https://drive.google.com/file/d/1Flcp-oRk8asOSFzWwyWyAQS2jyd_Xm3Z/view?usp=sharing**
+
+**Demo Final Score: https://drive.google.com/file/d/1_QCBmADqtFucWOeTyz4wb9dU2vNdQopz/view?usp=sharing**
 
 * The video must demonstrate your key functionality.
 * The video must be 5 minutes or less.
@@ -541,7 +508,9 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 ### 2. Images
 
-[Insert final project images here]
+![1764984597025](image/README/1764984597025.png)
+
+![1764984510475](image/README/1764984510475.png)
 
 *Include photos of your device from a few angles. If you have a casework, show both the exterior and interior (where the good EE bits are!).*
 
@@ -549,14 +518,16 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 *What were your results? Namely, what was the final solution/design to your problem?*
 
+**A computer plays the song. At the same time, the essential notes from that song were already transformed into real frequencies, then mapped to Timer0 compare values (OCR0B), and saved in the ATmega firmware as fixed arrays. These stored notes are organized by pitch into nine frequency sets, matching nine zones on the carpet. Four LED strips visually mark a 3×3 grid, dividing the mat into nine blocks. As the song progresses, the firmware predicts which block corresponds to the next key note and makes the LED border around that block half-bright just before the note happens. If the player steps on the correct block at the expected moment, the MCU instantly outputs the same note’s frequency as sound and turns that block’s LED border fully bright. If the player does not step correctly, the MCU outputs no sound and the LEDs stay off. This closes the loop: the song runs normally, the firmware forecasts the next key note to preview the block, the footstep decides whether the note is triggered locally in real time, and the LEDs show either a half-bright preview or a full-bright hit result.**
+
 Our final solution addressed the problem that commercial dance-arcade machines are expensive, bulky, and not accessible for casual use. We designed and built a portable, low-cost dance pad that replicates the core gameplay experience and integrates seamlessly with a computer.
 
 Once the pad is connected to a PC, pressing a start button initializes the game. During gameplay, blocks are displayed on the screen, where each block can appear as a hint (shown in yellow) or detected as a correct step (shown in green) when the user steps on the corresponding pad region. At the same time, an onboard LCD keeps a real-time score, incrementing by one point for every correct step.
 
-The dance pad itself uses  four LED strips arranged to represent nine grid cells . Visual feedback is provided directly on the pad:
+The dance pad itself uses four LED strips arranged to represent nine grid cells. Visual feedback is provided directly on the pad:
 
-* Hints are illuminated using  intermittent white light ,
-* Successful steps trigger  solid red light .
+* Hints are illuminated using intermittent white light
+* Successful steps trigger solid red light
 
 To enhance immersion, background music (BGM) plays through the computer once the game begins. Additionally, each successful step activates a buzzer on the dance pad that produces a corresponding tone in sync with the music.
 
@@ -570,14 +541,14 @@ Overall, our final design provides an engaging, responsive, and affordable alter
 
 *Validate at least two requirements, showing how you tested and your proof of work (videos, images, logic analyzer/oscilloscope captures, etc.).*
 
-| ID     | Description                                                                                                                                                                                                                                                                                                                              | Validation Outcome                                                                                            |
-| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| SRS-01 | The pressure sensors beneath each pad shall be sampled every 50 milliseconds ± 10 milliseconds to detect whether the pad is pressed and to estimate step intensity (light, strong).                                                                                                                                                     | Confirmed, ISR of 5ms is implemented                                                                          |
-| SRS-02 | Before each note, a partial section of the corresponding LED strip shall turn on as a visual hint approximately 0.5 ± 0.1 s before the expected step. When the user steps on that block within the valid timing window, the entire LED region for that pad shall light up fully and remain on while the pressure sensor detects contact | Confirmed, block lighting has same pace as ui and bgm                                                         |
-| SRS-03 | The LCD shall refresh the score within 1 second after each step is detected. A score of 1 shall be awarded if the player steps on the correct pad within a ±1 second window from the LED instruction; otherwise, a score of 0 shall be recorded.                                                                                        | Confirmed, presssing a sensor will give immdediate feedback that humen eyes cannot detect delay               |
-| SRS-04 | After each game session, the system shall display the final score and accuracy summary within 3 seconds of song completion.                                                                                                                                                                                                              | Confirmed, immediate scoring that humen eyes cannot detect delay                                              |
-| SRS-05 | The system shall generate PWM signals at different frequencies to drive the buzzer and produce distinct pitches when the player steps correctly within the allowed 1-second timing window. If no valid step is detected within that window, the buzzer shall not be activated.                                                           | Confirmed, correct step will generate a tone in response to bgm and incorrect step will not generate anything |
-| SRS-06 | The system shall allow the user to select the difficulty level by pressing a designated button. Each difficulty corresponds to a different preloaded song (e.g., slow or fast tempo). Upon valid button input, the system shall stop the current track and start the selected song within 3 seconds.                                     | Not implemented, too time consuming to find another song with easy and continuous musical track.              |
+| ID     | Description                                                                                                                                                                                                                                                                                                                              | Validation Outcome                                                                                                                  |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| SRS-01 | The pressure sensors beneath each pad shall be sampled every 50 milliseconds ± 10 milliseconds to detect whether the pad is pressed and to estimate step intensity (light, strong).                                                                                                                                                     | Confirmed, ISR of 5ms is implemented.                                                                                               |
+| SRS-02 | Before each note, a partial section of the corresponding LED strip shall turn on as a visual hint approximately 0.5 ± 0.1 s before the expected step. When the user steps on that block within the valid timing window, the entire LED region for that pad shall light up fully and remain on while the pressure sensor detects contact | Confirmed, block lighting has same pace as ui and bgm.                                                                              |
+| SRS-03 | The LCD shall refresh the score within 1 second after each step is detected. A score of 1 shall be awarded if the player steps on the correct pad within a ±1 second window from the LED instruction; otherwise, a score of 0 shall be recorded.                                                                                        | Confirmed, presssing a sensor will give immdediate feedback that human eyes cannot detect delay.                                    |
+| SRS-04 | After each game session, the system shall display the final score and accuracy summary within 3 seconds of song completion.                                                                                                                                                                                                              | Confirmed, immediate scoring that humen eyes cannot detect delay.                                                                   |
+| SRS-05 | The system shall generate PWM signals at different frequencies to drive the buzzer and produce distinct pitches when the player steps correctly within the allowed 1-second timing window. If no valid step is detected within that window, the buzzer shall not be activated.                                                           | Confirmed, correct step will generate a tone in response to bgm and incorrect step will not generate anything.                      |
+| SRS-06 | The system shall allow the user to select the difficulty level by pressing a designated button. Each difficulty corresponds to a different preloaded song (e.g., slow or fast tempo). Upon valid button input, the system shall stop the current track and start the selected song within 3 seconds.                                     | Modified, finding another suitable continuous song was too time-consuming, so a start/reset button was used instead to ensure sync. |
 
 #### 3.2 Hardware Requirements Specification (HRS) Results
 
@@ -587,23 +558,71 @@ Overall, our final design provides an engaging, responsive, and affordable alter
 
 *Validate at least two requirements, showing how you tested and your proof of work (videos, images, logic analyzer/oscilloscope captures, etc.).*
 
-| ID     | Description                                                                                                                        | Validation Outcome                                                                                                      |
-| ------ | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| HRS-01 | A distance sensor shall be used for obstacle detection. The sensor shall detect obstacles at a maximum distance of at least 10 cm. | Confirmed, sensed obstacles up to 15cm. Video in "validation" folder, shows tape measure and logged output to terminal. |
-|        |                                                                                                                                    |                                                                                                                         |
+| ID     | Description                                                                                                                                                              | Validation Outcome                                                                                                      |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| HRS-01 | The ATmega328PB microcontroller shall operate to ensure accurate timing control for LED and sound synchronization using pressure sensors and SPI communication with LCD. | Confirmed, sensed obstacles up to 15cm. Video in "validation" folder, shows tape measure and logged output to terminal. |
+| HRS-02 | Each pressure sensor beneath the mat modules shall detect applied forces in the range of0 N to 686 N (0-37kPa) with a voltage output sensitivity of ≥10 mV/N.          |                                                                                                                         |
+| HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. |                                                                                                                         |
+| HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           |                                                                                                                         |
+| HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      |                                                                                                                         |
+| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       |                                                                                                                         |
 
 ### 4. Conclusion
 
 Reflect on your project. Some questions to address:
 
-* What did you learn from it?
-* What went well?
-* What accomplishments are you proud of?
-* What did you learn/gain from this experience?
-* Did you have to change your approach?
-* What could have been done differently?
-* Did you encounter obstacles that you didn’t anticipate?
-* What could be a next step for this project?
+* **What did you learn from it?**
+* Fundamental and applied use of PWM, ADC, SPI, UART, addressable LEDs, audio‐frequency generation, and methods for integrating subsystems under strict timing constraints.
+* **What went well?**
+* The MUX and SPI subsystems worked smoothly.
+* **What accomplishments are you proud of?**
+* System-level synchronization. The PC and MCU (speaker/buzzer, LEDs) now run in full lockstep. When stepped, the buzzer pitch aligns exactly with the music.
+* **What did you learn/gain from this experience?**
+* Before using any device, specifications must be checked carefully in slides and datasheets. If unclear, additional research is required. About 60% of bugs came from oversight and 40% from unknown constraints, and systematic debugging tools such as printf and debug mode are essential.
+* **Did you have to change your approach?**
+* Yes. The initial plan used a single board, but timing-conflict issues made a two-board architecture necessary despite having already purchased a MUX.
+* **What could have been done differently?**
+* Speaker input. The current direct PWM square-wave drive (PD5) is inconsistent. A DAC plus amplifier would produce more stable and higher-quality audio.
+* **Did you encounter obstacles that you didn’t anticipate?**
+* Incorrect PWM formulas causing pitch errors. Insufficient RAM. Unstable ADC readings leading to deadlock. SPI refresh delays affecting note durations. UART transmission overruns. Incorrect LED timing pulses. Timer interrupts disturbing LED timing. A wrong data type for the global variable `remaining_ms` causing deadlock.
+* **What could be a next step for this project?**
+* Improve wiring, increase FSR measurement stability, and expand the music library.
+
+## Debugging and System Stabilization
+
+The main issue was that the system occasionally “froze” during the music game. At first the game ran smoothly for many notes, but later it stopped updating the block number and stayed stuck on one value (for example block 7).
+
+We analyzed several possible causes:
+
+1. **Timer1 blocking**
+
+A major suspicion was that something might overwrite Timer1 settings. Since Timer1 was used for the remaining_ms countdown, any modification to its registers could stop the ISR from firing. If the interrupt stopped running, remaining_ms would never reach 0, and the code would stay inside:
+
+while (remaining_ms > 0)
+
+The block stayed frozen at the last value and never advanced to the next note.
+
+2. **UART “solid” command blocking**
+
+We examined whether uart_send_block_solid() might wait for a reply from the peripheral. If the slave failed to send ACK for one block, the master could block inside that function. This would also produce a “frozen block” effect.
+
+3. **ADC sampling and logic race conditions**
+
+We used a loop that depended on: remaining_ms being updated in the Timer1 ISR, sample_flag being set at 1ms intervals, and ADC_read() being called only when sample_flag is true.
+
+If the sampling period fell out of sync, or remaining_ms was not updated correctly, the loop could run forever.
+
+After reviewing all interactions, we found that the bottleneck only happened after stepping on the sensor, which meant only the “solid” path triggered the failure:
+
+This strongly suggested that the ADC + Timer interaction path was part of the root cause.
+
+Final Resolution: Using ADC Interrupt Instead of Blocking ADC Reads
+
+**The final fix was moving from polling ADC reads to an ADC interrupt–based.**
+
+By using ADC interrupts, the program no longer: blocks inside ADC_read(), depends on exact timing inside the 1ms Timer1 ISR, risks losing Timer1 events, and no longer ties sampling speed to the main loop execution.
+
+This removed the hidden race condition between: Timer1 COMPA interrupts, ADC blocking read timing, and the main sampling loop. And the deadlock disappeared.
 
 ## References
 
