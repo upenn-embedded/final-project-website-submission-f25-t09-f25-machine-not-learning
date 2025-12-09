@@ -12,15 +12,23 @@
 
 **GitHub Pages Website URL: https://upenn-embedded.github.io/final-project-website-submission-f25-t09-f25-machine-not-learning/**
 
+![1765240661453](image/index/1765240661453.png)
+
+![1765240649577](image/index/1765240649577.png)
+
+![1765240680636](image/index/1765240680636.png)
+
+![1765240689135](image/index/1765240689135.png)
+
 ## 1. Demo
 
-**Demo Hint Only: https://drive.google.com/file/d/1PPW-uhF3AvNN9ISKI62phGgpCDDRCXEw/view?usp=sharing**
+Demo Hint Only: https://drive.google.com/file/d/1PPW-uhF3AvNN9ISKI62phGgpCDDRCXEw/view?usp=sharing
 
 **Demo Thursday Version: https://drive.google.com/file/d/1BiyH7qF1WEpQ59m6lbLG-jXoRF1k8Nr0/view?usp=sharing**
 
 **Demo Friday Version: https://drive.google.com/file/d/1Flcp-oRk8asOSFzWwyWyAQS2jyd_Xm3Z/view?usp=sharing**
 
-**Demo Final Score: https://drive.google.com/file/d/1_QCBmADqtFucWOeTyz4wb9dU2vNdQopz/view?usp=sharing**
+Demo Final Score: https://drive.google.com/file/d/1_QCBmADqtFucWOeTyz4wb9dU2vNdQopz/view?usp=sharing
 
 **In the demo, the device performs the following:**
 
@@ -58,7 +66,7 @@ This project combines entertainment technology with fitness in a creative and in
 
 ## 5. Software Requirements Specification (SRS)
 
-**5.1 Definitions, Abbreviations**
+**5.1 Data collection**
 
 **Data collection has been performed through UART logs and ADC sampling traces, showing reliable timing and stable pressure thresholds.**
 
@@ -81,7 +89,7 @@ This project combines entertainment technology with fitness in a creative and in
 
 A single, rhythmically stable instrumental track (.wav) was chosen as the basis for feature extraction. To automate the extraction of dominant pitches from the selected rhythmic audio track, a Python script was developed using librosa. The workflow consists of four main steps. First, the program loads the .wav file and applies the pYIN algorithm to estimate the fundamental frequency (f0) frame-by-frame, using a 20 ms hop size to achieve sufficient temporal resolution. Next, the f0 values are converted into MIDI note numbers, while unvoiced or unreliable frames are marked as None. Because raw frame-level data often produces many short, fragmented notes, the script merges consecutive identical MIDI values into longer note events and discards segments shorter than 40 ms. Finally, the resulting note sequence and corresponding durations are written to an output file for later use. This automated process greatly simplifies pitch extraction and ensures consistent formatting for downstream applications (e.g., PWM tone generation).
 
-The first part of the code converts MIDI note numbers to frequencies using the formula
+The first part of the code converts MIDI note numbers to frequencies using the formula:
 
 **f = 440 × 2^((midi – 69) / 12) ,**
 
@@ -89,11 +97,9 @@ which was verified using known reference pitches. The freq_to_top() function the
 
 **TOP = F_CPU / (2 * prescaler * freq) − 1.**
 
-pwm_init() was validated by ensuring Timer0 was correctly set to Fast PWM mode with OCR0A as the top, using OCR0B (PD5) as the output pin.
-
 The play_midi() function was tested by manually sweeping through known MIDI notes (e.g., 60, 69, 72) and confirming correct tone reproduction. A safety condition was added to mute invalid or zero-frequency notes by forcing OCR0A = 0.
 
-The large notes[] and durations[] arrays generated from Python were then integrated into a simple playback loop. Debugging this required checking array bounds, ensuring duration values were appropriate for _delay_ms(), and confirming that long durations did not cause timer overflow or blocking issues.
+The notes[] and durations[] arrays generated from Python were then integrated into a simple playback loop.
 
 Overall, the development process involved a combination of audio preprocessing challenges, Python-based feature extraction, microcontroller timer configuration, and waveform debugging using an oscilloscope and test tones. The final system successfully plays back the extracted melody using hardware PWM on the ATmega328PB.
 
@@ -154,7 +160,7 @@ The ST7735 display uses a custom library supporting:
 
 **(f) UART**
 
-The system is implemented across **two microcontroller boards** built on the **same hardware platform **Microchip** with the MCU model **ATmega328PB**** .
+The system is implemented across **two microcontroller boards** built on the same hardware platform Microchip with the MCU model ATmega328PB.
 
 * **Board A (Main controller)** runs the **application state machine** that determines lighting modes (block vs hint display), generates command frames.
 * **Board B (LED controller)** runs a **minimal loop-driven receiver** for lighting commands and controls LED strips.
@@ -170,7 +176,7 @@ The lighting logic operates deterministically at **1 Hz block update**, alternat
 
 ## 6. Hardware Requirements Specification (HRS)
 
-**6.1 Definitions, Abbreviations**
+**6.1 Data collection**
 
 **Data collection includes logic analyzer and oscilloscope traces of the LED timing protocol and ADC conversion timing measurements.**
 
@@ -189,7 +195,7 @@ The lighting logic operates deterministically at **1 Hz block update**, alternat
 
    A **74HC4051 analog multiplexer** selects among multiple pressure sensors.
 
-   Three MCU pins (PC[5:4], PB4) drive the MUX address lines, and the selected signal is read through **ADC7** .
+   Three MCU pins (PD[3:2], PB4) drive the MUX address lines, and the selected signal is read through **ADC7** (PE3).
 2. **Audio Output**
 
    A speaker is driven by **ATmega328PB A Timer0 PWM**.
@@ -211,23 +217,6 @@ The lighting logic operates deterministically at **1 Hz block update**, alternat
 
    LED strips share ground with the MCU and receive a separate 5 V rail due to higher current demand.
 
-We have achieved the following SRS elements:
-
-* Real-time MIDI playback
-* Real-time pressure sensing per block
-* Dynamic LED block visualization
-* Score accumulation and event detection
-
-Achieved HRS components:
-
-* Fully functional pressure sensing hardware
-* Stable 800 kHz SK6812 signaling on four strips
-* Correct PWM audio generation
-* Reliable MUX address line switching
-* Verified power delivery to LED strips and MCU peripherals
-* Mechanical platform (mat) for the step interface
-* LCD mounting and front-panel design
-
 ## 7. Results and Conclusion
 
 Our final solution addressed the problem that commercial dance-arcade machines are expensive, bulky, and not accessible for casual use. We designed and built a portable, low-cost dance pad that replicates the core gameplay experience and integrates seamlessly with a computer.
@@ -243,7 +232,7 @@ To enhance immersion, background music (BGM) plays through the computer once the
 
 Overall, our final design provides an engaging, responsive, and affordable alternative to arcade dance-machine systems, while maintaining portability and interactive feedback through LEDs, audio cues, and real-time scoring.
 
-#### 3.1 Software Requirements Specification (SRS) Results
+#### 7.1 Software Requirements Specification (SRS) Results
 
 | ID     | Description                                                                                                                                                                                                                                                                                                                              | Validation Outcome                                                                                                                  |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
@@ -254,16 +243,16 @@ Overall, our final design provides an engaging, responsive, and affordable alter
 | SRS-05 | The system shall generate PWM signals at different frequencies to drive the buzzer and produce distinct pitches when the player steps correctly within the allowed 1-second timing window. If no valid step is detected within that window, the buzzer shall not be activated.                                                           | Confirmed, correct step will generate a tone in response to bgm and incorrect step will not generate anything.                      |
 | SRS-06 | The system shall allow the user to select the difficulty level by pressing a designated button. Each difficulty corresponds to a different preloaded song (e.g., slow or fast tempo). Upon valid button input, the system shall stop the current track and start the selected song within 3 seconds.                                     | Modified, finding another suitable continuous song was too time-consuming, so a start/reset button was used instead to ensure sync. |
 
-#### 3.2 Hardware Requirements Specification (HRS) Results
+#### 7.2 Hardware Requirements Specification (HRS) Results
 
-| ID     | Description                                                                                                                                                              | Validation Outcome                                                                                                      |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| HRS-01 | The ATmega328PB microcontroller shall operate to ensure accurate timing control for LED and sound synchronization using pressure sensors and SPI communication with LCD. | Confirmed, sensed obstacles up to 15cm. Video in "validation" folder, shows tape measure and logged output to terminal. |
-| HRS-02 | Each pressure sensor beneath the mat modules shall detect applied forces in the range of0 N to 686 N (0-37kPa) with a voltage output sensitivity of ≥10 mV/N.          | Confirmed,                                                                                                              |
-| HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. | Confirmed,                                                                                                              |
-| HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           | Confirmed,                                                                                                              |
-| HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      | Confirmed,                                                                                                              |
-| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       | Confirmed,                                                                                                              |
+| ID     | Description                                                                                                                                                              | Validation Outcome                                                                                                                                                                                                                                                                                                                                                  |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HRS-01 | The ATmega328PB microcontroller shall operate to ensure accurate timing control for LED and sound synchronization using pressure sensors and SPI communication with LCD. | Confirmed, the demo video shows when the button of the game is pressed, the MCU controls the collaboration of LED, LCD, pressure sensors and speakers accurately. When the certain music tone comes, the LED first turns white for hint; If the pressure sensor is stamped, the LED turns red and the speaker plays the correct tone, the score on the LCD changes. |
+| HRS-02 | Each pressure sensor beneath the mat modules shall detect applied forces in the range of0 N to 686 N (0-37kPa) with a voltage output sensitivity of ≥10 mV/N.          | Confirmed, the nine pressure sensors are connected to resistors separately. When the ADC detects voltage of the sensor below the threshold value 850/1024, the block was determined as stamped on. The demo video shows when the block is stamped on, the color of LED turns from white to red.                                                                     |
+| HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. | Confirmed, the demo video shows when the sensor detects the force, the led turns from white to red; And when the certain music tone comes, the LED on the block corresponding to the tone shines white for hint.                                                                                                                                                    |
+| HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           | Confirmed, the demo video shows the speaker plays the correct music tone at the correct with a big volume with the background music generated by the computer.                                                                                                                                                                                                      |
+| HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      | Confirmed, the demo video shows when the button is pressed, the score on LED is reset. During the game, the score accumulates and shows the final score at the end of the game.                                                                                                                                                                                     |
+| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       | Confirmed, the demo video shows when the button is pressed, the score on LED is reset and the program is running for the game.                                                                                                                                                                                                                                      |
 
 * **What did you learn from it?**
 * Fundamental and applied use of PWM, ADC, SPI, UART, addressable LEDs, audio‐frequency generation, and methods for integrating subsystems under strict timing constraints.
