@@ -45,15 +45,13 @@ A team member starts the game and steps on the correct squares of the nine-grid 
 
 1. The system plays the Mario melody.
 2. For each note:
-   * **Timer1 controls the note duration.**
-   * **The ADC reads the pressure on the selected block.**
-   * **If the user steps on the correct block, the buzzer plays the note.**
-   * **The LEDs on the matching strip light up.**
+   * Timer1 controls the note duration.
+   * The ADC reads the pressure on the selected block.
+   * If the user steps on the correct block, the buzzer plays the note.
+   * The LEDs on the matching strip light up.
 3. The score updates immediately when a correct step is detected.
 
-During gameplay, the mat reads force-sensor data every 50 ± 10 ms. About 0.5 ± 0.1 s before each beat, the LED border around the target block lights up as a hint. If the user steps correctly within ±1 s of the cue, the LEDs turn fully bright, the buzzer plays the tone, and the score on the LCD updates within 1 s.
-
-The LCD shows the score and timing accuracy throughout the song. After the song ends, the system displays the final score within 3 s. All LED and audio outputs stay synchronized under MCU control, demonstrating stable sensing, visual cues, audio feedback, and real-time scoring.
+During gameplay, the mat reads force-sensor data every 50 ± 10 ms. About 0.5 ± 0.1 s before each beat, the LED border around the target block lights up as a hint. If the user steps correctly within ±1 s of the cue, the LEDs turn fully bright, the buzzer plays the tone, and the score on the LCD updates within 1 s. The LCD shows the score and timing accuracy throughout the song. After the song ends, the system displays the final score within 3 s. All LED and audio outputs stay synchronized under MCU control, demonstrating stable sensing, visual cues, audio feedback, and real-time scoring.
 
 ## 2. Abstract
 
@@ -75,11 +73,11 @@ This project combines entertainment technology with fitness in a creative and in
 
 ## 5. Software Requirements Specification (SRS)
 
-**5.1 Data collection**
+### 5.1 Data collection
 
 **Data collection has been performed through UART logs and ADC sampling traces, showing reliable timing and stable pressure thresholds.**
 
-**5.2 Functionality**
+### 5.2 Functionality
 
 | ID     | Description                                                                                                                                                                                                                                                                                                                              |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -89,6 +87,8 @@ This project combines entertainment technology with fitness in a creative and in
 | SRS-04 | After each game session, the system shall display the final score and accuracy summary within 3 seconds of song completion.                                                                                                                                                                                                              |
 | SRS-05 | The system shall generate PWM signals at different frequencies to drive the buzzer and produce distinct pitches when the player steps correctly within the allowed 1-second timing window. If no valid step is detected within that window, the buzzer shall not be activated.                                                           |
 | SRS-06 | The system shall allow the user to select the difficulty level by pressing a designated button. Each difficulty corresponds to a different preloaded song (e.g., slow or fast tempo). Upon valid button input, the system shall stop the current track and start the selected song within 3 seconds.                                     |
+
+### 5.3 Firmware Implementation
 
 **(a) Real-Time Scheduling (Timer1 Interrupts)**
 
@@ -100,11 +100,11 @@ A single, rhythmically stable instrumental track (.wav) was chosen as the basis 
 
 The first part of the code converts MIDI note numbers to frequencies using the formula:
 
-**f = 440 × 2^((midi – 69) / 12) ,**
+**f = 440 × 2^((midi – 69) / 12)**,
 
 which was verified using known reference pitches. The freq_to_top() function then translates the target frequency into the Timer0 "TOP" value using Fast PWM with OCR0A as the register.
 
-**TOP = F_CPU / (2 * prescaler * freq) − 1.**
+**TOP = F_CPU / (prescaler * freq) − 1.**
 
 The play_midi() function was tested by manually sweeping through known MIDI notes (e.g., 60, 69, 72) and confirming correct tone reproduction. A safety condition was added to mute invalid or zero-frequency notes by forcing OCR0A = 0.
 
@@ -114,39 +114,39 @@ Overall, the development process involved a combination of audio preprocessing c
 
 A melody (173 MIDI notes) is played using:
 
-* **MIDI → frequency mapping** via an exponential function
-* Runtime conversion of **frequency to Timer0 TOP value**
-* PWM generation on **OC0B** at 50% duty cycle
+* MIDI → frequency mapping via an exponential function
+* Runtime conversion of frequency to Timer0 TOP value
+* PWM generation on OC0B at 50% duty cycle
 
-**Runtime conversion of MIDI note to frequency (not storing precomputed frequencies) because the MIDI array is smaller than a frequency table, thus reducing SRAM usage. Frequencies are computed in real time instead of being hard-coded.**
+Runtime conversion of MIDI note to frequency (not storing precomputed frequencies) because the MIDI array is smaller than a frequency table, thus reducing SRAM usage. Frequencies are computed in real time instead of being hard-coded.
 
 The part supports real-time pitch triggering via pressure input.
 
 **(c) Pressure Input**
 
-Signal chain : **5 V → 1 MΩ resistor → ADC input → Force-Sensitive Resistor 5 MΩ → ground**.
+Signal chain : 5 V → 1 MΩ resistor → ADC input → Force-Sensitive Resistor 5 MΩ → ground.
 
 The pressure sensor is a force-sensitive resistor (5 MΩ when not pressed). Pressure lowers its resistance, decreasing its voltage.
 
-The GPIO + MUX selects one sensor according to **the active note’s  block index**.
+The GPIO + MUX selects one sensor according to the active note’s  block index.
 
-After **channel switching**, firmware inserts a short delay to ensure the MUX output and divider voltage are stable before ADC sampling.
+After channel switching, firmware inserts a short delay to ensure the MUX output and divider voltage are stable before ADC sampling.
 
-ADC conversion is called by **software**.
+ADC conversion is called by software.
 
-The MCU compares the ADC reading to a **threshold** to detect a foot press and checks if the pressed sensor matches the active block.
+The MCU compares the ADC reading to a threshold to detect a foot press and checks if the pressed sensor matches the active block.
 
-A correct step adds +10 to score.
+A correct step adds +1 to score.
 
 **(d) SK6812 LED Strip Driver**
 
 The LED controller toggles GPIO pins (ATmega328PB B PORTC, PC0, PC1, PC2, PC3) using bit-level register manipulation macros that compile into single AVR instructions , achieving near one-clock-cycle execution time for deterministic GPIO switching.
 
-LED bit timing is produced by **__builtin_avr_delay_cycles**() to match **SK6812 protocol** requirements under a 16 MHz clock.
+LED bit timing is produced by **__builtin_avr_delay_cycles**() to match SK6812 protocol requirements under a 16 MHz clock.
 
 A RGBW pixel frame is 32 bits per LED, transmitted serially for all LEDs in a selected strip segment.
 
-**To prevent hardware resource contention, LED driving is fully isolated on a dedicated UART-controlled sub-ATmega328PB. The hostATmega328PB sends LED update commands via UART, while retaining control of ADC channel selection, speaker PWM, and LCD SPI, ensuring stable timing for the MVP demo.**
+To prevent hardware resource contention, LED driving is fully isolated on a dedicated UART-controlled sub-ATmega328PB. The hostATmega328PB sends LED update commands via UART, while retaining control of ADC channel selection, speaker PWM, and LCD SPI, ensuring stable timing for the MVP demo.
 
 Block-to-strip mapping is generated by note_to_block() and led_set_block(), enabling LED visualization.
 
@@ -169,27 +169,27 @@ The ST7735 display uses a custom library supporting:
 
 **(f) UART**
 
-The system is implemented across **two microcontroller boards** built on the same hardware platform Microchip with the MCU model ATmega328PB.
+The system is implemented across two microcontroller boards built on the same hardware platform Microchip with the MCU model ATmega328PB.
 
-* **Board A (Main controller)** runs the **application state machine** that determines lighting modes (block vs hint display), generates command frames.
-* **Board B (LED controller)** runs a **minimal loop-driven receiver** for lighting commands and controls LED strips.
+* Board A (Main controller) runs the application state machine that determines lighting modes (block vs hint display), generates command frames.
+* Board B (LED controller) runs a minimal loop-driven receiver for lighting commands and controls LED strips.
 
 A core application loop:
 
 1. Decode incoming sensor or host command.
 2. Decide LED mode.
 3. Pack mode into a single byte frame.
-4. Transmit frame via **UART1 to Board B**.
+4. Transmit frame via UART1 to Board B.
 
-The lighting logic operates deterministically at **1 Hz block update**, alternating between led_show_block() and led_show_block_hint() based on mode.
+The lighting logic operates deterministically at 1 Hz block update, alternating between led_show_block() and led_show_block_hint() based on mode.
 
 ## 6. Hardware Requirements Specification (HRS)
 
-**6.1 Data collection**
+### 6.1 Data collection
 
 **Data collection includes logic analyzer and oscilloscope traces of the LED timing protocol and ADC conversion timing measurements.**
 
-**6.2 Functionality**
+### 6.2 Functionality
 
 | ID     | Description                                                                                                                                                              |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -200,29 +200,31 @@ The lighting logic operates deterministically at **1 Hz block update**, alternat
 | HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      |
 | HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       |
 
+### 6.3 Hardware Implementation
+
 1. **Pressure Sensing**
 
-   A **74HC4051 analog multiplexer** selects among multiple pressure sensors.
+   A 74HC4051 analog multiplexer selects among multiple pressure sensors.
 
-   Three MCU pins (PD[3:2], PB4) drive the MUX address lines, and the selected signal is read through **ADC7** (PE3).
+   Three MCU pins (PD[3:2], PB4) drive the MUX address lines, and the selected signal is read through ADC7 (PE3).
 2. **Audio Output**
 
-   A speaker is driven by **ATmega328PB A Timer0 PWM**.
+   A speaker is driven by ATmega328PB A Timer0 PWM.
 
    MIDI notes are converted to frequencies, and the timer’s TOP value generates the corresponding tone.
 3. **LED Visualization**
 
-   Four **SK6812 LED strips** (60 LEDs each) are controlled using cycle-accurate RGBW timing.
+   Four SK6812 LED strips (60 LEDs each) are controlled using cycle-accurate RGBW timing.
 
-   Each strip uses a dedicated MCU **GPIO** pin (PC0, PC1, PC2, PC3 on **ATmega328PB B**), enabling independent block lighting.
+   Each strip uses a dedicated MCU GPIO pin (PC0, PC1, PC2, PC3 on ATmega328PB B), enabling independent block lighting.
 4. **LCD Display**
 
-   A **1.8'' ST7735 TFT** display is connected via SPI.
+   A 1.8'' ST7735 TFT display is connected via SPI.
 
    It shows text and simple graphics for system feedback (current score).
 5. **Power**
 
-   All components operate from a **5 V / 3.3 V supply** .
+   All components operate from a 5 V / 3.3 V supply .
 
    LED strips share ground with the MCU and receive a separate 5 V rail due to higher current demand.
 
@@ -241,7 +243,7 @@ To enhance immersion, background music (BGM) plays through the computer once the
 
 Overall, our final design provides an engaging, responsive, and affordable alternative to arcade dance-machine systems, while maintaining portability and interactive feedback through LEDs, audio cues, and real-time scoring.
 
-#### 7.1 Software Requirements Specification (SRS) Results
+### 7.1 Software Requirements Specification (SRS) Results
 
 | ID     | Description                                                                                                                                                                                                                                                                                                                              | Validation Outcome                                                                                                                  |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
@@ -252,7 +254,7 @@ Overall, our final design provides an engaging, responsive, and affordable alter
 | SRS-05 | The system shall generate PWM signals at different frequencies to drive the buzzer and produce distinct pitches when the player steps correctly within the allowed 1-second timing window. If no valid step is detected within that window, the buzzer shall not be activated.                                                           | Confirmed, correct step will generate a tone in response to bgm and incorrect step will not generate anything.                      |
 | SRS-06 | The system shall allow the user to select the difficulty level by pressing a designated button. Each difficulty corresponds to a different preloaded song (e.g., slow or fast tempo). Upon valid button input, the system shall stop the current track and start the selected song within 3 seconds.                                     | Modified, finding another suitable continuous song was too time-consuming, so a start/reset button was used instead to ensure sync. |
 
-#### 7.2 Hardware Requirements Specification (HRS) Results
+### 7.2 Hardware Requirements Specification (HRS) Results
 
 | ID     | Description                                                                                                                                                              | Validation Outcome                                                                                                                                                                                                                                                                                                                                                  |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -261,7 +263,9 @@ Overall, our final design provides an engaging, responsive, and affordable alter
 | HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. | Confirmed, the demo video shows when the sensor detects the force, the led turns from white to red; And when the certain music tone comes, the LED on the block corresponding to the tone shines white for hint.                                                                                                                                                    |
 | HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           | Confirmed, the demo video shows the speaker plays the correct music tone at the correct with a big volume with the background music generated by the computer.                                                                                                                                                                                                      |
 | HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      | Confirmed, the demo video shows when the button is pressed, the score on LED is reset. During the game, the score accumulates and shows the final score at the end of the game.                                                                                                                                                                                     |
-| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       | Confirmed, the demo video shows when the button is pressed, the score on LED is reset and the program is running for the game.                                                                                                                                                                                                                                      |
+| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       | Modified, the demo video shows when the button is pressed, the score on LED is reset and the program is running for the game.                                                                                                                                                                                                                                      |
+
+### 7.3 Conclusion
 
 * **What did you learn from it?**
 * Fundamental and applied use of PWM, ADC, SPI, UART, addressable LEDs, audio‐frequency generation, and methods for integrating subsystems under strict timing constraints.
