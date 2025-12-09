@@ -1,29 +1,5 @@
 <!-- # **dAnciNG** -->
 
-<h1 class="logo-blink-crazy" style="text-align:center;">dAnciNG</h1>
-
-<style>
-.logo-blink-crazy {
-  font-size: 48px;
-  font-weight: bold;
-  animation: crazyFlash 0.8s infinite;
-}
-
-@keyframes crazyFlash {
-  0%   { color: #ff0000; }
-  10%  { color: #00ff00; }
-  20%  { color: #ff8800; }
-  30%  { color: #00ccff; }
-  40%  { color: #ff00ff; }
-  50%  { color: #33ff33; }
-  60%  { color: #ff3333; }
-  70%  { color: #00ffaa; }
-  80%  { color: #ffcc00; }
-  90%  { color: #00ff44; }
-  100% { color: #ff0000; }
-}
-</style>
-
 **Team Number: 9**
 
 | Team Member Name | Email Address           |
@@ -301,3 +277,18 @@ Overall, our final design provides an engaging, responsive, and affordable alter
 * Incorrect PWM formulas causing pitch errors. Insufficient RAM. Unstable ADC readings leading to deadlock. SPI refresh delays affecting note durations. UART transmission overruns. Incorrect LED timing pulses. Timer interrupts disturbing LED timing. A wrong data type for the global variable `remaining_ms` causing deadlock.
 * **What could be a next step for this project?**
 * Improve wiring, increase FSR measurement stability, and expand the music library.
+
+<style>
+.page-header .project-name {
+  animation: slowCrazyFlash 2.5s infinite;
+}
+
+@keyframes slowCrazyFlash {
+  0%   { color: #ffffff; } 
+  20%  { color: #ff6666; }
+  40%  { color: #66cc66; }
+  60%  { color: #66bbff; }
+  80%  { color: #ff99ff; }
+  100% { color: #ffffff; }
+}
+</style>
