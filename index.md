@@ -12,13 +12,13 @@
 
 **GitHub Pages Website URL: https://upenn-embedded.github.io/final-project-website-submission-f25-t09-f25-machine-not-learning/**
 
-![1765240661453](image/index/1765240661453.png)
-
-![1765240649577](image/index/1765240649577.png)
-
-![1765240680636](image/index/1765240680636.png)
-
-![1765240689135](image/index/1765240689135.png)
+<table>
+  <tr>
+    <td><img src="image/index/1765240680636.png" width="300"></td>
+    <td><img src="image/index/1765240661453.png" width="300"></td>
+    <td><img src="image/README/1764984510475.png" width="300"></td>
+  </tr>
+</table>
 
 ## 1. Demo
 
