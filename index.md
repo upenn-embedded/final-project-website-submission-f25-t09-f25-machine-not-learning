@@ -39,25 +39,11 @@ Demo Friday Version: https://drive.google.com/file/d/1Flcp-oRk8asOSFzWwyWyAQS2jy
 
 Demo Final Score: https://drive.google.com/file/d/1_QCBmADqtFucWOeTyz4wb9dU2vNdQopz/view?usp=sharing
 
-**In the demo, the device performs the following:**
-
-A team member starts the game and steps on the correct squares of the nine-grid mat in response to the music and prompts. The score appears on the LCD as the game runs.
-
-1. The system plays the Mario melody.
-2. For each note:
-   * Timer1 controls the note duration.
-   * The ADC reads the pressure on the selected block.
-   * If the user steps on the correct block, the buzzer plays the note.
-   * The LEDs on the matching strip light up.
-3. The score updates immediately when a correct step is detected.
-
-During gameplay, the mat reads force-sensor data every 50 ± 10 ms. About 0.5 ± 0.1 s before each beat, the LED border around the target block lights up as a hint. If the user steps correctly within ±1 s of the cue, the LEDs turn fully bright, the buzzer plays the tone, and the score on the LCD updates within 1 s. The LCD shows the score and timing accuracy throughout the song. After the song ends, the system displays the final score within 3 s. All LED and audio outputs stay synchronized under MCU control, demonstrating stable sensing, visual cues, audio feedback, and real-time scoring.
-
 ## 2. Abstract
 
 **This project presents a portable music game mat powered by the ATmega328PB microcontroller. The system integrates LEDs, pressure sensors, a buzzer, and an LCD to create an interactive platform where players step in rhythm with preloaded songs. Each correct step triggers full light in light strip and sound feedback, while the LCD displays real-time scores. The design combines entertainment and exercise, offering a fun way to stay active at home.**
 
-A computer plays the song. At the same time, the essential notes from that song were already transformed into real frequencies, then mapped to Timer0 compare values (OCR0B), and saved in the ATmega firmware as fixed arrays. These stored notes are organized by pitch into nine frequency sets, matching nine zones on the carpet. Four LED strips visually mark a 3×3 grid, dividing the mat into nine blocks. As the song progresses, the firmware predicts which block corresponds to the next key note and makes the LED border around that block half-bright just before the note happens. If the player steps on the correct block at the expected moment, the MCU instantly outputs the same note’s frequency as sound and turns that block’s LED border fully bright. If the player does not step correctly, the MCU outputs no sound and the LEDs stay off. This closes the loop: the song runs normally, the firmware forecasts the next key note to preview the block, the footstep decides whether the note is triggered locally in real time, and the LEDs show either a half-bright preview or a full-bright hit result.
+**A computer plays the song. At the same time, the essential notes from that song were already transformed into real frequencies, then mapped to Timer0 compare values (OCR0B), and saved in the ATmega firmware as fixed arrays. These stored notes are organized by pitch into nine frequency sets, matching nine zones on the carpet. Four LED strips visually mark a 3×3 grid, dividing the mat into nine blocks. As the song progresses, the firmware predicts which block corresponds to the next key note and makes the LED border around that block half-bright just before the note happens. If the player steps on the correct block at the expected moment, the MCU instantly outputs the same note’s frequency as sound and turns that block’s LED border fully bright. If the player does not step correctly, the MCU outputs no sound and the LEDs stay off. This closes the loop: the song runs normally, the firmware forecasts the next key note to preview the block, the footstep decides whether the note is triggered locally in real time, and the LEDs show either a half-bright preview or a full-bright hit result.**
 
 ## 3. Motivation
 
@@ -71,28 +57,11 @@ This project combines entertainment technology with fitness in a creative and in
 
 ![1764985521975](image/README/1764985521975.png)
 
-## 5. Software Requirements Specification (SRS)
-
-### 5.1 Data collection
-
-**Data collection has been performed through UART logs and ADC sampling traces, showing reliable timing and stable pressure thresholds.**
-
-### 5.2 Functionality
-
-| ID     | Description                                                                                                                                                                                                                                                                                                                              |
-| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SRS-01 | The pressure sensors beneath each pad shall be sampled every 50 milliseconds ± 10 milliseconds to detect whether the pad is pressed and to estimate step intensity (light, strong).                                                                                                                                                     |
-| SRS-02 | Before each note, a partial section of the corresponding LED strip shall turn on as a visual hint approximately 0.5 ± 0.1 s before the expected step. When the user steps on that block within the valid timing window, the entire LED region for that pad shall light up fully and remain on while the pressure sensor detects contact |
-| SRS-03 | The LCD shall refresh the score within 1 second after each step is detected. A score of 1 shall be awarded if the player steps on the correct pad within a ±1 second window from the LED instruction; otherwise, a score of 0 shall be recorded.                                                                                        |
-| SRS-04 | After each game session, the system shall display the final score and accuracy summary within 3 seconds of song completion.                                                                                                                                                                                                              |
-| SRS-05 | The system shall generate PWM signals at different frequencies to drive the buzzer and produce distinct pitches when the player steps correctly within the allowed 1-second timing window. If no valid step is detected within that window, the buzzer shall not be activated.                                                           |
-| SRS-06 | The system shall allow the user to select the difficulty level by pressing a designated button. Each difficulty corresponds to a different preloaded song (e.g., slow or fast tempo). Upon valid button input, the system shall stop the current track and start the selected song within 3 seconds.                                     |
-
-### 5.3 Firmware Implementation
+## 5. Firmware Implementation
 
 **(a) Real-Time Scheduling (Timer1 Interrupts)**
 
-**Timer1 on ATmega328PB A** operates in CTC mode to generate a 1 ms interrupt. The ISR decreases the remaining duration of a musical note, and asserts sample_flag for periodic ADC sampling.
+Timer1 on ATmega328PB A operates in CTC mode to generate a 1 ms interrupt. The ISR decreases the remaining duration of a musical note, and asserts sample_flag for periodic ADC sampling.
 
 **(b) Musical**
 
@@ -183,24 +152,7 @@ A core application loop:
 
 The lighting logic operates deterministically at 1 Hz block update, alternating between led_show_block() and led_show_block_hint() based on mode.
 
-## 6. Hardware Requirements Specification (HRS)
-
-### 6.1 Data collection
-
-**Data collection includes logic analyzer and oscilloscope traces of the LED timing protocol and ADC conversion timing measurements.**
-
-### 6.2 Functionality
-
-| ID     | Description                                                                                                                                                              |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| HRS-01 | The ATmega328PB microcontroller shall operate to ensure accurate timing control for LED and sound synchronization using pressure sensors and SPI communication with LCD. |
-| HRS-02 | Each pressure sensor beneath the mat modules shall detect applied forces in the range of0 N to 686 N (0-37kPa) with a voltage output sensitivity of ≥10 mV/N.          |
-| HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. |
-| HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           |
-| HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      |
-| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       |
-
-### 6.3 Hardware Implementation
+## 6. Hardware Implementation
 
 1. **Pressure Sensing**
 
@@ -241,7 +193,7 @@ The dance pad itself uses four LED strips arranged to represent nine grid cells.
 
 To enhance immersion, background music (BGM) plays through the computer once the game begins. Additionally, each successful step activates a buzzer on the dance pad that produces a corresponding tone in sync with the music.
 
-Overall, our final design provides an engaging, responsive, and affordable alternative to arcade dance-machine systems, while maintaining portability and interactive feedback through LEDs, audio cues, and real-time scoring.
+**Overall, our final design provides an engaging, responsive, and affordable alternative to arcade dance-machine systems, while maintaining portability and interactive feedback through LEDs, audio cues, and real-time scoring.**
 
 ### 7.1 Software Requirements Specification (SRS) Results
 
