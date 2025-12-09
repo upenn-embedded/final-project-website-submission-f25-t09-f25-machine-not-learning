@@ -1,4 +1,4 @@
-<!-- # **dAnciNG** -->
+# **dAnciNG**
 
 **Team Number: 9**
 
@@ -8,7 +8,7 @@
 | YANG Xing       | yangxing@seas.upenn.edu |
 | ShANG Wang       | wang0102@seas.upenn.edu |
 
-**GitHub Repository URL: https://github.com/upenn-embedded/final-project-f25-f25_final_project_t09.git**
+**GitHub Repository URL: https://github.com/upenn-embedded/final-project-website-submission-f25-t09-f25-machine-not-learning.git**
 
 **GitHub Pages Website URL: https://upenn-embedded.github.io/final-project-website-submission-f25-t09-f25-machine-not-learning/**
 
@@ -29,11 +29,13 @@ allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; pic
 allowfullscreen>
 </iframe>
 
+**Demo: https://drive.google.com/file/d/1BiyH7qF1WEpQ59m6lbLG-jXoRF1k8Nr0/view?usp=sharing**
+
+**https://youtu.be/-tpDP1GK9ac?si=1uDxwRdN3QnuRwen**
+
 Demo Hint Only: https://drive.google.com/file/d/1PPW-uhF3AvNN9ISKI62phGgpCDDRCXEw/view?usp=sharing
 
-**Demo Thursday Version: https://drive.google.com/file/d/1BiyH7qF1WEpQ59m6lbLG-jXoRF1k8Nr0/view?usp=sharing**
-
-**Demo Friday Version: https://drive.google.com/file/d/1Flcp-oRk8asOSFzWwyWyAQS2jyd_Xm3Z/view?usp=sharing**
+Demo Friday Version: https://drive.google.com/file/d/1Flcp-oRk8asOSFzWwyWyAQS2jyd_Xm3Z/view?usp=sharing
 
 Demo Final Score: https://drive.google.com/file/d/1_QCBmADqtFucWOeTyz4wb9dU2vNdQopz/view?usp=sharing
 
