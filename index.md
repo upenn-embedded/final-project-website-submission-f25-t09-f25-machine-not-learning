@@ -1,12 +1,36 @@
-# **dAnciNG**
+<!-- # **dAnciNG** -->
+
+<h1 class="logo-blink-crazy" style="text-align:center;">dAnciNG</h1>
+
+<style>
+.logo-blink-crazy {
+  font-size: 48px;
+  font-weight: bold;
+  animation: crazyFlash 0.8s infinite;
+}
+
+@keyframes crazyFlash {
+  0%   { color: #ff0000; }
+  10%  { color: #00ff00; }
+  20%  { color: #ff8800; }
+  30%  { color: #00ccff; }
+  40%  { color: #ff00ff; }
+  50%  { color: #33ff33; }
+  60%  { color: #ff3333; }
+  70%  { color: #00ffaa; }
+  80%  { color: #ffcc00; }
+  90%  { color: #00ff44; }
+  100% { color: #ff0000; }
+}
+</style>
 
 **Team Number: 9**
 
 | Team Member Name | Email Address           |
 | ---------------- | ----------------------- |
-| Xiang Ding       | ding1026@seas.upenn.edu |
-| Yang Xing        | yangxing@seas.upenn.edu |
-| Shang Wang       | wang0102@seas.upenn.edu |
+| XiANG Ding      | ding1026@seas.upenn.edu |
+| YANG Xing       | yangxing@seas.upenn.edu |
+| ShANG Wang       | wang0102@seas.upenn.edu |
 
 **GitHub Repository URL: https://github.com/upenn-embedded/final-project-f25-f25_final_project_t09.git**
 
