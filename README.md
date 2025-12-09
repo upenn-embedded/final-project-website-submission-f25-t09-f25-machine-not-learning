@@ -14,7 +14,7 @@
 
 **GitHub Repository URL: https://github.com/upenn-embedded/final-project-f25-f25_final_project_t09.git**
 
-**GitHub Pages Website URL:**
+**GitHub Pages Website URL:https://upenn-embedded.github.io/final-project-website-submission-f25-t09-f25-machine-not-learning/**
 
 ## Final Project Proposal
 
@@ -508,8 +508,6 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 ### 2. Images
 
-![1764984597025](image/README/1764984597025.png)
-
 ![1764984510475](image/README/1764984510475.png)
 
 *Include photos of your device from a few angles. If you have a casework, show both the exterior and interior (where the good EE bits are!).*
@@ -558,14 +556,14 @@ Overall, our final design provides an engaging, responsive, and affordable alter
 
 *Validate at least two requirements, showing how you tested and your proof of work (videos, images, logic analyzer/oscilloscope captures, etc.).*
 
-| ID     | Description                                                                                                                                                              | Validation Outcome                                                                                                      |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| HRS-01 | The ATmega328PB microcontroller shall operate to ensure accurate timing control for LED and sound synchronization using pressure sensors and SPI communication with LCD. | Confirmed, sensed obstacles up to 15cm. Video in "validation" folder, shows tape measure and logged output to terminal. |
-| HRS-02 | Each pressure sensor beneath the mat modules shall detect applied forces in the range of0 N to 686 N (0-37kPa) with a voltage output sensitivity of ≥10 mV/N.          | Confirmed,                                                                                                              |
-| HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. | Confirmed,                                                                                                              |
-| HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           | Confirmed,                                                                                                              |
-| HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      | Confirmed,                                                                                                              |
-| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       | Confirmed,                                                                                                              |
+| ID     | Description                                                                                                                                                              | Validation Outcome                                                                                                                                                                                                                                                                                                                                                  |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HRS-01 | The ATmega328PB microcontroller shall operate to ensure accurate timing control for LED and sound synchronization using pressure sensors and SPI communication with LCD. | Confirmed, the demo video shows when the button of the game is pressed, the MCU controls the collaboration of LED, LCD, pressure sensors and speakers accurately. When the certain music tone comes, the LED first turns white for hint; If the pressure sensor is stamped, the LED turns red and the speaker plays the correct tone, the score on the LCD changes. |
+| HRS-02 | Each pressure sensor beneath the mat modules shall detect applied forces in the range of0 N to 686 N (0-37kPa) with a voltage output sensitivity of ≥10 mV/N.          | Confirmed, the nine pressure sensors are connected to resistors separately. When the ADC detects voltage of the sensor below the threshold value 850/1024, the block was determined as stamped on. The demo video shows when the block is stamped on, the color of LED turns from white to red.                                                                     |
+| HRS-03 | Each LED module shall respond to control signals with a latency of less than 50 ms and be capable of displaying 9 different colors representing different musical tones. | Confirmed, the demo video shows when the sensor detects the force, the led turns from white to red; And when the certain music tone comes, the LED on the block corresponding to the tone shines white for hint.                                                                                                                                                    |
+| HRS-04 | The integrated speaker shall reproduce musical notes within the 200 Hz–5 kHz frequency range with a minimum output level of 90 dB measured at 0.5 m distance.           | Confirmed, the demo video shows the speaker plays the correct music tone at the correct with a big volume with the background music generated by the computer.                                                                                                                                                                                                      |
+| HRS-05 | The LCD display shall update player scores with a refresh delay of no greater than 200 ms after each scoring event.                                                      | Confirmed, the demo video shows when the button is pressed, the score on LED is reset. During the game, the score accumulates and shows the final score at the end of the game.                                                                                                                                                                                     |
+| HRS-06 | The button is used to switch songs for different difficult levels.                                                                                                       | Confirmed, the demo video shows when the button is pressed, the score on LED is reset and the program is running for the game.                                                                                                                                                                                                                                      |
 
 ### 4. Conclusion
 
