@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dAnciNG MACHINE — Team 09</title>
+<title>dAnciNG — Team 09</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
@@ -1113,7 +1113,7 @@ footer a { color: var(--cyan); text-decoration: none; }
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#">dAnciNG_MACHINE</a>
+  <a class="nav-logo" href="#">dAnciNG</a>
   <ul class="nav-links">
     <li><a href="#overview">Overview</a></li>
     <li><a href="#demo">Demo</a></li>
@@ -1127,33 +1127,11 @@ footer a { color: var(--cyan); text-decoration: none; }
 <!-- HERO -->
 <div class="hero">
   <div class="hero-grid"></div>
-  <p class="hero-badge">ESE 3500 · Team 09 · F25 · UPenn</p>
+  <p class="hero-badge">ESE 5190 · Team 09 · F25 · UPenn</p>
   <h1>dAnciNG</h1>
   <p class="hero-sub">MACHINE NOT LEARNING</p>
 
-  <!-- CSS Dancer -->
-  <div class="dancer">
-    <svg class="dancer-svg" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Head -->
-      <circle cx="50" cy="20" r="14" stroke="#00f5ff" stroke-width="2" fill="rgba(0,245,255,0.05)"/>
-      <!-- Body -->
-      <line x1="50" y1="34" x2="50" y2="100" stroke="#00f5ff" stroke-width="2"/>
-      <!-- Arms raised -->
-      <line x1="50" y1="55" x2="20" y2="35" stroke="#ff0080" stroke-width="2"/>
-      <line x1="50" y1="55" x2="80" y2="35" stroke="#ff0080" stroke-width="2"/>
-      <!-- Hands -->
-      <circle cx="20" cy="35" r="4" fill="#ff0080"/>
-      <circle cx="80" cy="35" r="4" fill="#ff0080"/>
-      <!-- Legs dancing -->
-      <line x1="50" y1="100" x2="25" y2="150" stroke="#ffe600" stroke-width="2"/>
-      <line x1="50" y1="100" x2="70" y2="140" stroke="#ffe600" stroke-width="2"/>
-      <!-- Feet -->
-      <line x1="25" y1="150" x2="10" y2="165" stroke="#ffe600" stroke-width="2"/>
-      <line x1="70" y1="140" x2="90" y2="155" stroke="#ffe600" stroke-width="2"/>
-      <!-- Glow dots -->
-      <circle cx="50" cy="75" r="3" fill="#00f5ff" opacity="0.6"/>
-    </svg>
-  </div>
+
 
   <div class="hero-stats">
     <div class="stat-box">
@@ -1499,37 +1477,37 @@ ISR(ADC_vect) {
       <div class="sprint-dot"></div>
       <div class="sprint-num">SPRINT_01</div>
       <div class="sprint-title">Core Modules</div>
-      <div class="sprint-body">LCD, LED, and audio processing completed. Python-based pitch extraction via librosa pYIN algorithm — 20ms hop size, MIDI merging &gt;40ms, PROGMEM output arrays. PWM timer validated with oscilloscope.</div>
+      <div class="sprint-body">LCD, LED, and audio processing completed. Python pitch extraction via librosa pYIN. PWM timer validated with oscilloscope.</div>
     </div>
     <div class="sprint-item">
-      <div class="sprint-dot" style="border-color:var(--pink);box-shadow:var(--glow-pink)"></div>
+      <div class="sprint-dot"></div>
       <div class="sprint-num">SPRINT_02</div>
       <div class="sprint-title">Melody + Pressure Integration</div>
-      <div class="sprint-body">Melody engine, buzzer PWM, and MUX-based ADC pressure sensing all working and communicating. Timer1 ISR verified for note duration. Full melody playback with ADC-gated triggering demonstrated end-to-end.</div>
+      <div class="sprint-body">Melody engine, buzzer PWM, and MUX-based ADC pressure sensing integrated. Full melody playback with ADC-gated triggering demonstrated end-to-end.</div>
     </div>
     <div class="sprint-item">
-      <div class="sprint-dot" style="border-color:var(--yellow);box-shadow:var(--glow-yellow)"></div>
+      <div class="sprint-dot"></div>
       <div class="sprint-num">SPRINT_03</div>
       <div class="sprint-title">SK6812 LED Driver + LCD</div>
-      <div class="sprint-body">SPI-encoded SK6812 driver at 2.4 MHz. Each WS2812 bit encoded as 3 SPI bits (100/110). LCD ST7735 integrated with custom graphics library — pixel, line, circle, RGB565, and ASCII LUT rendering.</div>
+      <div class="sprint-body">SK6812 driver at 2.4 MHz with 3-SPI-bit encoding. ST7735 LCD integrated with custom graphics library for score display.</div>
     </div>
     <div class="sprint-item">
-      <div class="sprint-dot" style="border-color:var(--green);box-shadow:0 0 10px rgba(0,255,136,0.6)"></div>
+      <div class="sprint-dot"></div>
       <div class="sprint-num">MVP_DEMO</div>
       <div class="sprint-title">Full System Demo</div>
-      <div class="sprint-body">Dual-board UART architecture deployed. Board A runs game state machine, Board B handles LED strip control. PC + MCU in full audio lockstep. Hint → step → LED flash → buzzer pitch → score update loop confirmed stable.</div>
+      <div class="sprint-body">Dual-board UART architecture deployed. PC + MCU in full audio lockstep. Hint → step → LED flash → buzzer → score loop confirmed stable.</div>
     </div>
     <div class="sprint-item">
-      <div class="sprint-dot" style="border-color:var(--pink);box-shadow:var(--glow-pink)"></div>
-      <div class="sprint-num">BUG_FIX // CRITICAL</div>
-      <div class="sprint-title">ADC Interrupt Deadlock Resolution</div>
-      <div class="sprint-body">System froze after extended play — <code>remaining_ms</code> never reaching 0 due to race between Timer1 ISR and blocking <code>ADC_read()</code>. Fixed by switching to ADC interrupt-driven sampling, eliminating the hidden race condition entirely.</div>
+      <div class="sprint-dot"></div>
+      <div class="sprint-num">BUG_FIX</div>
+      <div class="sprint-title">ADC Deadlock Resolution</div>
+      <div class="sprint-body">System froze due to race between Timer1 ISR and blocking <code>ADC_read()</code>. Fixed by switching to interrupt-driven ADC sampling.</div>
     </div>
     <div class="sprint-item">
-      <div class="sprint-dot" style="border-color:var(--cyan);box-shadow:var(--glow-cyan)"></div>
+      <div class="sprint-dot"></div>
       <div class="sprint-num">FINAL_DEMO</div>
       <div class="sprint-title">Full Game Complete</div>
-      <div class="sprint-body">Complete Mario melody with 9 step zones, four LED strips, real-time scoring, and start/reset button. PC BGM and MCU buzzer synchronized in lockstep. Stable across full song duration.</div>
+      <div class="sprint-body">Complete Mario melody across 9 zones, four LED strips, real-time scoring, start/reset button. Stable across full song duration.</div>
     </div>
   </div>
 </section>
@@ -1632,9 +1610,9 @@ ISR(ADC_vect) {
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">dAnciNG_MACHINE</div>
+  <div class="footer-logo">dAnciNG</div>
   <div class="footer-info">
-    ESE 3500 · Team 09 · Fall 2025<br>
+    ESE 5190 · Team 09 · Fall 2025<br>
     Xiang Ding · Yang Xing · Shang Wang<br>
     University of Pennsylvania · SEAS
   </div>
